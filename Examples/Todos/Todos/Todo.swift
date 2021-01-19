@@ -30,6 +30,8 @@ let todoReducer = Reducer<Todo, TodoAction, TodoEnvironment> { todo, action, _ i
 struct TodoView: View {
   let store: Store<Todo, TodoAction>
 
+  @State private var isPrioritized: Bool = false
+
   var body: some View {
     WithViewStore(self.store) { viewStore in
       HStack {
@@ -42,6 +44,12 @@ struct TodoView: View {
           "Untitled Todo",
           text: viewStore.binding(get: { $0.description }, send: TodoAction.textFieldChanged)
         )
+
+        Button(action: { isPrioritized = !isPrioritized }) {
+          Image(systemName: isPrioritized ? "flag.fill" : "flag")
+            .foregroundColor(isPrioritized ? Color.red : Color.gray)
+        }
+        .buttonStyle(PlainButtonStyle())
       }
       .foregroundColor(viewStore.isComplete ? .gray : nil)
     }
